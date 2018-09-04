@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-slim
 
 ARG MIRROR="https://repo1.maven.org/maven2/com/facebook/presto"
-ARG PRESTO_VERSION="0.198"
+ARG PRESTO_VERSION="0.209"
 ARG PRESTO_BIN="${MIRROR}/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz"
 ARG PRESTO_CLI_BIN="${MIRROR}/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar"
 
@@ -35,6 +35,15 @@ RUN mkdir -p $PRESTO_HOME && \
     mv presto-cli-${PRESTO_VERSION}-executable.jar presto && \
     chmod +x presto && \
     chown -R ${PRESTO_USER}:${PRESTO_USER} $PRESTO_HOME
+
+# azure blob storage support
+COPY aux_lib/hadoop-azure-2.7.7.jar /presto/plugin/hive-hadoop2
+COPY aux_lib/azure-storage-2.0.0.jar /presto/plugin/hive-hadoop2
+# Fix azure 
+COPY aux_lib/jets3t-0.9.4.jar /presto/plugin/hive-hadoop2
+COPY aux_lib/jetty-util-6.1.25.jar /presto/plugin/hive-hadoop2
+# gcs support
+COPY aux_lib/gcs-connector-latest-hadoop2.jar /presto/plugin/hive-hadoop2
 
 # Need to work with python2
 # See: https://github.com/prestodb/presto/issues/4678
