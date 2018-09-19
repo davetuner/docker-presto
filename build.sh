@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-TAG=0.209
+TAG=1.0.210
 NAME=presto
-IMAGE=davetuner/$NAME:$TAG
+IMAGE=$NAME:$TAG
 echo $IMAGE
 docker build -t $IMAGE .

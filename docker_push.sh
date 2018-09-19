@@ -1,5 +1,5 @@
 #!/bin/bash
 # tag
-docker tag davetuner/presto:0.209 davetuner/presto:0.209
+docker tag presto:1.0.210 transformersreg11.azurecr.io/presto:1.0.210
 # push
-docker push davetuner/presto:0.209
+docker push transformersreg11.azurecr.io/presto:1.0.210
