@@ -1,13 +1,14 @@
 FROM openjdk:8-jre-slim
 
 ARG MIRROR="https://repo1.maven.org/maven2/com/facebook/presto"
-ARG PRESTO_VERSION="0.209"
+ARG PRESTO_VERSION="0.210"
 ARG PRESTO_BIN="${MIRROR}/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz"
 ARG PRESTO_CLI_BIN="${MIRROR}/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar"
 
 USER root
 
 RUN apt-get update && \
+    apt-get install sudo -y && \
     apt-get install -y --allow-unauthenticated curl wget less && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -15,6 +16,8 @@ ENV PRESTO_HOME /presto
 ENV PRESTO_USER presto
 ENV PRESTO_CONF_DIR ${PRESTO_HOME}/etc
 ENV PATH $PATH:$PRESTO_HOME/bin
+
+RUN echo "${PRESTO_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN useradd \
 		--create-home \
@@ -53,6 +56,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/* \
     && cd /usr/local/bin \
 	&& rm -rf idle pydoc python python-config 
+
+
 
 USER $PRESTO_USER
 
